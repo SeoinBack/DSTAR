@@ -81,12 +81,12 @@ def active_motif_to_fingerprint(elemental_combinations,configurations):
     boiling_point = [[],[],[]]
     melting_point = [[],[],[]]
     IE = [[],[],[]]
-    natom = [[],[],[]]
+    natom = [[],[],[]]    
     error = []
     name=[]
+    
     for i in notebook.tqdm(docs):
         doc = i
-
         try:
             active_property = tight_mean_descriptor(doc[0])
             floor_property = mean_descriptor(doc[1])
@@ -109,5 +109,6 @@ def active_motif_to_fingerprint(elemental_combinations,configurations):
         except:
             error.append(i)
     properties = [atomic_number,block,average_ionic_radius,common_oxidation_states,Pauling_electronegativity,row,group,thermal_conductivity,
-                 boiling_point,melting_point,IE,natom]
+                   boiling_point,melting_point,IE,natom]
+  
     return properties, error
