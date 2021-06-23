@@ -46,7 +46,8 @@ def active_motif_to_fingerprint(elemental_combinations,configurations):
         configurations (list) : list from get_unique_active_motif function
     Return:
         list 1 : properties of corresponing element 
-        list 2 : error 
+        list 2 : name list
+	list 3 : error 
     """    
     docs = []
     a = elemental_combinations[0]
@@ -85,7 +86,7 @@ def active_motif_to_fingerprint(elemental_combinations,configurations):
     error = []
     name=[]
     
-    for i in notebook.tqdm(docs):
+    for i in docs:
         doc = i
         try:
             active_property = tight_mean_descriptor(doc[0])
@@ -111,4 +112,4 @@ def active_motif_to_fingerprint(elemental_combinations,configurations):
     properties = [atomic_number,block,average_ionic_radius,common_oxidation_states,Pauling_electronegativity,row,group,thermal_conductivity,
                    boiling_point,melting_point,IE,natom]
   
-    return properties, error
+    return properties,name, error
