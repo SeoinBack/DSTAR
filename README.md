@@ -13,8 +13,8 @@ This repository contains codes and notebooks used to create results in our paper
 * Generalized Adsorption Simulator for Python ([GASpy](https://github.com/ulissigroup/GASpy))
 
 * Additional packages required for gaspy enviroment:
-- [scikit-learn](http://scikit-learn.org/stable/)
-- [pymatgen](http://pymatgen.org)
+- [scikit-learn](http://scikit-learn.org/stable/) (0.24.2)
+- [pymatgen](http://pymatgen.org) (2021.3.3)
 
 ## Usage
 
