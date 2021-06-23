@@ -1,6 +1,6 @@
-# New Active Motif Manuscript
+# Active Motif based Binding Energy Prediction
 
-This repository contains scripts/notebooks we used to create the result in our paper
+This repository contains codes and notebooks used to create results in our paper.
 
 ## Table of Contents
 
@@ -13,17 +13,17 @@ This repository contains scripts/notebooks we used to create the result in our p
 * Generalized Adsorption Simulator for Python ([GASpy](https://github.com/ulissigroup/GASpy))
 
 * Additional packages required for gaspy enviroment:
-- [sckit-learn](http://scikit-learn.org/stable/)
+- [scikit-learn](http://scikit-learn.org/stable/)
 - [pymatgen](http://pymatgen.org)
 
 ## Usage
 
 ### Example
 
-We have included example containig how we perform our study as Jupyter notebook ('Example.ipynb')
+"Example" Jupyter notebook demonstrates how we trained the model and used for binding energy prediction. ('Example.ipynb')
 
 ### Make figure
 
 Located in the 'notebooks' folder
 
-We have included Jupyter notebook used to make figure, such as histogram, in our paper 
+We have included Jupyter notebooks used to make figures, such as histogram.
