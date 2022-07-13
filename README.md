@@ -6,8 +6,6 @@ This repository contains codes and notebooks used to create results in our paper
 
 - [Prerequisites](#prerequisites)
 - [Usage](#usage)
-	- [Example](#example)
-	- [Make figure](#make-figure)
 
 ## Prerequisites
 * Generalized Adsorption Simulator for Python ([GASpy](https://github.com/ulissigroup/GASpy))
