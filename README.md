@@ -20,10 +20,3 @@ This repository contains codes and notebooks used to create results in our paper
 
 ### Example
 
-"Example" Jupyter notebook demonstrates how we trained the model and used for binding energy prediction. ('Example.ipynb')
-
-### Make figure
-
-Located in the 'notebooks' folder
-
-We have included Jupyter notebooks used to make figures, such as histogram.
