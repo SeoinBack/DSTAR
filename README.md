@@ -18,5 +18,6 @@ This repository contains codes and notebooks used to create results in our paper
 
 ## Usage
 
-### Example
+See DSTAR_Guide_kr.pdf
+We will update English version ASAP
 
