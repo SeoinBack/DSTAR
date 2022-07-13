@@ -1,0 +1,3 @@
+name,FNN,Same,Sub,target
+5,{'Co': 1},{'Rh': 2},{'Rh': 1},0.0
+5,{'Rh': 1},{'Co': 2},{'Co': 1},0.0
