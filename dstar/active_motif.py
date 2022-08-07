@@ -73,11 +73,14 @@ def get_active_site(atom):
     
     # Remove Adosrbates tagged with positiv integer and save positions of adsorbates
     atoms,binding_positions = remove_adsorbate(atom)
-    
+    adsorb_count = len(binding_positions)/9
     # Substitue all adosrbates to Uranium
-    for pos in binding_positions:
-        atoms += Atoms('U', positions=[pos])
+    
+    for i,pos in enumerate(binding_positions):
+        if (i+1) % adsorb_count == 0:
+            atoms += Atoms('U', positions=[pos])
     u_idx = [i for i,v in enumerate(atoms.get_chemical_symbols()) if v == 'U']
+    
     
     structures = AseAtomsAdaptor.get_structure(atoms)
     # This VoronoiNN parameter is used to find FNN with tight condition.

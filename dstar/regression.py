@@ -13,7 +13,7 @@ from sklearn.linear_model import ElasticNet
 from sklearn.svm import SVR
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, Matern, ConstantKernel as C
-from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import GradientBoostingRegressor, ExtraTreesRegressor
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -74,7 +74,7 @@ class Regressor():
         assert name_x == name_y, 'Name column of Target dataframe and name of atoms do not match'
         
         X = data.iloc[:,1:]
-        y = target.iloc[:,1]
+        y = target.loc[:,'target']
         
         if self.test:
             if self.load_scaler:
@@ -120,6 +120,10 @@ class Regressor():
                 logger.info('Start Gaussian Process Regression')
                 kernel = 1.0 * Matern(length_scale=1.0,nu=2.5)
                 reg = GaussianProcessRegressor(kernel=kernel,n_restarts_optimizer=10)
+            elif regressor == 'ETR':
+                logger.info('Start Gaussian Process Regression')
+                reg =ExtraTreesRegressor( bootstrap=False, max_features=0.7500000000000001, 
+                                   min_samples_leaf=2, min_samples_split=2, n_estimators=100)
             else:
                 raise RuntimeError(f'{regressor} was not defined')
                 
