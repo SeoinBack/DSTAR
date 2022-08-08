@@ -63,6 +63,10 @@ def train(args):
         
         dataset = dataset.sort_values('name')
         dataset.reset_index(drop=True,inplace=True)
+        
+        motif = motif.sort_values('name')
+        motif.reset_index(drop=True,inplace=True)
+        
         target = target.sort_values('name')
         target.reset_index(drop=True, inplace=True)
         
