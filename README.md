@@ -2,6 +2,8 @@
 
 This repository contains codes and notebooks used to create results in our paper.
 
+For more details, check out this paper (https://pubs.acs.org/doi/pdf/10.1021/acs.jcim.1c00726).
+
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
@@ -16,7 +18,5 @@ This repository contains codes and notebooks used to create results in our paper
 
 ## Usage
 
-See DSTAR_Guide_kr.pdf.
-
-We will update English version ASAP.
+See DSTAR_Guide_.pdf.
 
