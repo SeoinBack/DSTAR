@@ -1,4 +1,4 @@
-# **D**ft & **S**Tructure free **A**ctive motif based **R**epresentation (DSTAR)
+# DSTAR : <u>**D**</u>ft & <u>**S**</u>Tructure free <u>**A**</u>ctive motif based <u>**R**</u>epresentation (DSTAR)
 
 This repository contains codes and notebooks used to create results in our paper.
 
