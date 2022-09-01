@@ -1,4 +1,4 @@
-# Dft & STructure free Active motif based Representation (DSTAR)
+# **D**ft & **S**Tructure free **A**ctive motif based **R**epresentation (DSTAR)
 
 This repository contains codes and notebooks used to create results in our paper.
 
