@@ -90,8 +90,10 @@ class AtomAlter():
             
             ## Rich element is set to 'B'
             b = max(set(el),key=el.count)
-            a = [j for j in el if j != b][0]
-            
+            try:
+              a = [j for j in el if j != b][0]
+            except IndexError:
+              a = b
             fnn = literal_eval(v['FNN'])
             same = literal_eval(v['Same'])
             sub = literal_eval(v['Sub'])

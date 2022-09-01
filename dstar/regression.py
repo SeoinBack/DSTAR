@@ -14,6 +14,7 @@ from sklearn.svm import SVR
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, Matern, ConstantKernel as C
 from sklearn.ensemble import GradientBoostingRegressor, ExtraTreesRegressor
+import xgboost
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -29,6 +30,9 @@ class Regressor():
                  test: bool = False,
                  model_path: str = None, 
                  test_ratio: float = 0.2,
+                 algo = 'total',
+                 loaded_model = None,
+                 loaded_scaler = None
         ):
         """
         Train_data, test_data and target dataframe should have 'name' column
@@ -37,25 +41,37 @@ class Regressor():
         self.data = data
         self.target = target
         self.test = test
+        self.regressor = algo
+        self.loaded_model = loaded_model
+        self.loaded_scaler = loaded_scaler
         
-        if self.test:
-            #print('Initiate Data Prediction')
-            assert model_path != None, 'There is no Model path to test!!'
-            
-            self.load_model = True
-            self.model_name = model_path.split('/')[-1] 
-            
-            assert 'model.pkl' in os.listdir(model_path), 'Model does not exist in model path!!'
-            self.loaded_model = joblib.load(model_path+'/model.pkl')
-            #logger.info(f'Load Model {self.model_name}')
+        if loaded_scaler != None:
+          self.load_scaler = True
+        if loaded_model != None:
+          self.load_model = True
+        #if self.test:
+        #    #print('Initiate Data Prediction')
+        #    assert model_path != None, 'There is no Model path to test!!'
+        #    
+        #    self.load_model = True
+        #    self.model_name = model_path.split('/')[-1] 
+        #    
+        #    #assert 'model.pkl' in os.listdir(model_path), 'Model does not exist in model path!!'
+        #    if 'model.pkl' in os.listdir(model_path):
+        #        self.loaded_model = joblib.load(model_path+'/model.pkl')
+        #    elif 'model.json' in os.listdir(model_path):
+        #        self.loaded_model = xgboost.XGBRegressor()
+        #        self.loaded_model.load_model(model_path+'/model.json')
+        #    #logger.info(f'Load Model {self.model_name}')
 
-            if 'scaler.pkl' in os.listdir(model_path):
-                #logger.info('Load Scaler')
-                self.load_scaler = True
-                self.loaded_scaler = joblib.load(model_path+'/scaler.pkl')
-            else:
-                self.load_scaler = False
+        #    if 'scaler.pkl' in os.listdir(model_path):
+        #        #logger.info('Load Scaler')
+        #        self.load_scaler = True
+        #        self.loaded_scaler = joblib.load(model_path+'/scaler.pkl')
+        #    else:
+        #        self.load_scaler = False
         
+        self.load_model 
         self.test_ratio = test_ratio
         self.save_dir = './model/' + str(datetime.today().strftime("%Y-%m-%d")) +'/'
     
@@ -98,7 +114,9 @@ class Regressor():
             
         return X_train, X_test, y_train, y_test, name_train, name_test, scaler
         
-    def regression(self, regressor = 'GBR'):
+    def regression(self, regressor = None):
+        if regressor == None:
+            regressor = self.regressor
         if not self.test:
             #assert self.target != None, 'Need target.csv in atoms folder!!' 
             
@@ -124,6 +142,11 @@ class Regressor():
                 logger.info('Start Gaussian Process Regression')
                 reg =ExtraTreesRegressor( bootstrap=False, max_features=0.7500000000000001, 
                                    min_samples_leaf=2, min_samples_split=2, n_estimators=100)
+            elif regressor == 'XGB':
+                logger.info('Start XGbooster Regression')
+                reg = xgboost.XGBRegressor(n_estimators=1000, learning_rate=0.1, gamma=0, subsample=0.75,
+                           colsample_bytree=1, max_depth=11)
+                
             else:
                 raise RuntimeError(f'{regressor} was not defined')
                 
@@ -174,14 +197,16 @@ class Regressor():
             eln_error, eln_train, eln_test, eln, eln_scaler = self.regression('ELN')
             svr_error, svr_train, svr_test, svr, svr_scaler = self.regression('SVR')
             gpr_error, gpr_train, gpr_test, gpr, gpr_scaler = self.regression('GPR')
+            xgb_error, xgb_train, xgb_test, xgb, xgb_scaler = self.regression('XGB')
             
             perf_dict = {gbr_error[2] : ['Gradient Boosting Regressor', gbr_error, gbr_train, gbr_test, gbr, gbr_scaler],
                          krr_error[2] : ['Kernel Ridge Regressor', krr_error, krr_train, krr_test, krr, krr_scaler],
                          eln_error[2] : ['ElasticNet Regressor', eln_error, eln_train, eln_test, eln, eln_scaler],
                          svr_error[2] : ['Support Vector Regressor', svr_error, svr_train, svr_test, svr, svr_scaler],
-                         gpr_error[2] : ['Gaussian Process Regressor', gpr_error, gpr_train, gpr_test, gpr, gpr_scaler]}
+                         gpr_error[2] : ['Gaussian Process Regressor', gpr_error, gpr_train, gpr_test, gpr, gpr_scaler],
+                         xgb_error[2] : ['XGBooster Regressor', xgb_error, xgb_train, xgb_test, xgb, xgb_scaler]}
             
-            best_model = perf_dict[min(gbr_error[2], krr_error[2], eln_error[2], svr_error[2], gpr_error[2])]
+            best_model = perf_dict[min(gbr_error[2], krr_error[2], eln_error[2], svr_error[2], gpr_error[2], xgb_error[2])]
             
             print('=====================================================')
             print(' ')
@@ -192,8 +217,14 @@ class Regressor():
             print('=====================================================')
             
             createFolder(self.save_dir)
-            joblib.dump(best_model[4], self.save_dir+'model.pkl')
+            
+            if best_model[0] == 'XGBooster Regressor':
+                best_model[4].save_model(save_dir+'model.json')
+            else:
+                joblib.dump(best_model[4], self.save_dir+'model.pkl')
             joblib.dump(best_model[5], self.save_dir+'scaler.pkl')
+            
+            
             
             return best_model[1], best_model[2], best_model[3]
             

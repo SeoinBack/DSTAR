@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 import joblib
 import tqdm 
-
+import xgboost
 from dstar.regression import Regressor, createFolder
 from dstar.fingerprint import surfs_to_df, motifs_to_df
 
@@ -82,12 +82,12 @@ def train(args):
     
     if not args.convert_only:
         if args.algo == 'total':
-            reg = Regressor(dataset, target, test_ratio = args.test_ratio)
+            reg = Regressor(dataset, target, test_ratio = args.test_ratio,algo=args.algo)
             error, trained_df, tested_df = reg.performance_comparison()
 
         else:
-            reg = Regressor(dataset, target, test_ratio = args.test_ratio)
-            error, trained_df, tested_df, reg, scaler = reg.regression(args.algo)
+            reg = Regressor(dataset, target, test_ratio = args.test_ratio,algo=args.algo)
+            error, trained_df, tested_df, reg, scaler = reg.regression()
             
             print('=====================================================')
             print(' ')
@@ -98,9 +98,12 @@ def train(args):
             print(' ')
             print('=====================================================')
             
-            save_dir = '../model/' + str(datetime.today().strftime("%Y-%m-%d")) +'/'
+            save_dir = './model/' + str(datetime.today().strftime("%Y-%m-%d")) +'/'
             createFolder(save_dir)
-            joblib.dump(reg, save_dir+'model.pkl')
+            if args.algo == 'XGB':
+                reg.save_model(save_dir+'model.json')
+            else:
+                joblib.dump(reg, save_dir+'model.pkl')
             joblib.dump(scaler, save_dir+'scaler.pkl')
     
         trained_df.to_csv('Train_results.csv',index=None)
@@ -118,6 +121,19 @@ def test(args):
         model_name = model_path.split('/')[-2]
         
     print(f'Load Model {model_name}')
+    
+    assert model_path != None, 'There is no Model path to test!!'
+    
+    model_name = model_path.split('/')[-1] 
+
+    if 'model.pkl' in os.listdir(model_path):
+        loaded_model = joblib.load(model_path+'/model.pkl')
+    elif 'model.json' in os.listdir(model_path):
+        loaded_model = xgboost.XGBRegressor()
+        loaded_model.load_model(model_path+'/model.json')
+    if 'scaler.pkl' in os.listdir(model_path):
+        loaded_scaler = joblib.load(model_path+'/scaler.pkl')
+    
     print('Initiate Screening...')
     dens_df = pd.DataFrame(columns=['elements','density'])
     elem, dens = [], []
@@ -132,7 +148,7 @@ def test(args):
         
         dataset = motifs_to_df(motif,skip=True)
     
-        reg = Regressor(dataset, target, test=True, model_path=model_path)
+        reg = Regressor(dataset, target, test=True, model_path=model_path, loaded_model = loaded_model, loaded_scaler = loaded_scaler)
         tested_df = reg.regression()
         motif['pred'] = tested_df['pred']
         motif.to_csv(data_path+csv)
