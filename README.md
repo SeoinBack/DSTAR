@@ -16,11 +16,15 @@ For more details, check out this paper (https://pubs.acs.org/doi/pdf/10.1021/acs
 - [scikit-learn](http://scikit-learn.org/stable/) (0.24.2)
 - [pymatgen](http://pymatgen.org) (2021.3.3)
 
-## Usage
-### Machine Learning Model
-See DSTAR_Guide_.pdf to use ML model.
+## Usage of ML model
+See DSTAR_Guide_.pdf.
 
-### CO2RR Application
+## Application
+DSTAR can be utilized to discover catalyst for various electrochemical reactions.
+You can reproduce the catalyst discovery for each reaction with the following descriptions.
+
+### CO2RR
+#### Usage
 To reproduce DSTAR application for CO2RR, please refer to three ipynb files in `application/CO2RR/`. Each ipynb file will do the following: 
 
 `01_Scaler.ipynb` will generates scaler to normalize the productivity.
@@ -31,6 +35,6 @@ To reproduce DSTAR application for CO2RR, please refer to three ipynb files in `
 
 More details are in each ipynb files.
 
-### Data for CO2RR Application
+#### Data 
 All predicted CO* / H* / OH* binding energies and coordination number of prototype surface used for application can be found in `application/CO2RR/data/energy` and `application/CO2RR/data/CN_dict.pkl`, and the boundary conditions of selectivity map are in `application/CO2RR/script/condition.py`.
 
