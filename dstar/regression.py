@@ -45,7 +45,7 @@ class Regressor():
         self.loaded_model = loaded_model
         self.loaded_scaler = loaded_scaler
         
-        #Initialize load_model and load_sclar to False by default
+        #Initialize load_model and load_scaler to False by default
         #Added on Dec. 4. 2024
         self.load_scaler = False
         self.load_model = False
